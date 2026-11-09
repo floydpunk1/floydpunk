@@ -1,169 +1,148 @@
-/* phoenix. — behaviour: water flow, routing, guestbook */
+/* Homepage — water glows, albums, routing, optional custom cursor */
 (function () {
   'use strict';
 
 /* =========================================================
-     1. the water: blobs that drift on their own and flow
-        toward the cursor with heavy easing, so they feel
-        like light moving through liquid, not objects
-        chasing the pointer.
+     1. water — two glows easing toward the cursor.
+        transform-only animation = cheap on weak machines.
      ========================================================= */
 
-var blobs = [
-    { el: document.getElementById('blob-1'), x: 0,  y: 0,   speed: 0.030, spread: 1.4, drift: 0.00014, phase: 0.0 },
-    { el: document.getElementById('blob-2'), x: 0,  y: 0,   speed: 0.018, spread: 2.0, drift: 0.00010, phase: 2.1 },
-    { el: document.getElementById('blob-3'), x: 0,  y: 0,   speed: 0.045, spread: 1.0, drift: 0.00020, phase: 4.2 }
-  ];
-
-var mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+var glowA = document.getElementById('glow-a');
+  var glowB = document.getElementById('glow-b');
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+  var ax = 0, ay = 0, bx = 0, by = 0;   // current glow positions
+
 window.addEventListener('pointermove', function (e) {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    mx = e.clientX; my = e.clientY;
   }, { passive: true });
 
-function flow(now) {
+function flow() {
     if (!reduced) {
-      // convert cursor to a -1..1 space relative to viewport centre
-      var cx = mouse.x / window.innerWidth - 0.5;
-      var cy = mouse.y / window.innerHeight - 0.5;
+      // each glow lags differently, like two currents
+      ax += (mx - ax) * 0.035;
+      ay += (my - ay) * 0.035;
+      bx += (mx - bx) * 0.015;
+      by += (my - by) * 0.015;
 
-blobs.forEach(function (b) {
-        // where this blob "wants" to be: cursor pulled outward
-        // by its own spread, plus a slow circular idle drift
-        var targetX = cx * b.spread
-                    + Math.cos(now * b.drift + b.phase) * 0.22;
-        var targetY = cy * b.spread
-                    + Math.sin(now * b.drift * 1.3 + b.phase) * 0.22;
-
-// ease toward the target — the "water" lag
-        b.x += (targetX - b.x) * b.speed;
-        b.y += (targetY - b.y) * b.speed;
-
-var tx = (b.x * 100 + 50);   // to percentage of viewport
-        var ty = (b.y * 100 + 50);
-
-b.el.style.transform =
-          'translate(' + (tx - 23) + 'vmax, ' + (ty - 23) + 'vmax)';
-      });
+glowA.style.transform = 'translate(' + (ax - 15) + 'px,' + (ay - 15) + 'px)';
+      glowB.style.transform = 'translate(' + (bx * 0.6 - 30) + 'px,' + (by * 0.6 - 30) + 'px)';
     }
     requestAnimationFrame(flow);
   }
-
-// place blobs sensibly before the first frame
-  blobs.forEach(function (b) {
-    b.x = (Math.random() - 0.5) * 0.6;
-    b.y = (Math.random() - 0.5) * 0.6;
-  });
-
-requestAnimationFrame(flow);
+  requestAnimationFrame(flow);
 
 /* =========================================================
-     2. hash-based section navigation
+     2. albums — edit ONLY this list to manage your gallery.
+        cover: image path (or "" for an automatic placeholder)
+        href:  where the album opens (page or external host)
+        Everything renders itself; no HTML editing needed.
+     ========================================================= */
+
+var ALBUMS = [
+    { slug: 'ocs',      title: 'Original Characters', note: '12 drawings', cover: '', href: 'albums/ocs.html' },
+    { slug: 'sketches', title: 'Sketchbook',           note: 'wips',       cover: '', href: 'albums/sketches.html' },
+    { slug: 'fanart',   title: 'Fan Art',              note: '6 drawings',  cover: '', href: 'albums/fanart.html' }
+    // add more albums by copying a line — the grid reflows itself
+  ];
+
+var grid = document.getElementById('albums');
+
+ALBUMS.forEach(function (a) {
+    var card = document.createElement('a');
+    card.className = 'album';
+    card.href = a.href;
+    card.target = '_blank';               // opens in a new tab
+    card.rel = 'noopener noreferrer';
+
+var cover = document.createElement('div');
+    cover.className = 'cover';
+
+if (a.cover) {
+      var img = document.createElement('img');
+      img.src = a.cover;
+      img.alt = a.title;
+      img.loading = 'lazy';
+      img.onerror = function () {
+        cover.innerHTML = '<span>' + a.title.charAt(0) + '</span>';
+      };
+      cover.appendChild(img);
+    } else {
+      cover.innerHTML = '<span>' + a.title.charAt(0) + '</span>';
+    }
+
+var meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.innerHTML = '<b>' + a.title + '</b><small>' + a.note + '</small>';
+
+card.appendChild(cover);
+    card.appendChild(meta);
+    grid.appendChild(card);
+  });
+
+/* =========================================================
+     3. every external link on the page opens in a new tab
+        (covers links you add to the HTML later, too)
+     ========================================================= */
+
+document.querySelectorAll('main a[href^="http"]').forEach(function (a) {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+
+/* =========================================================
+     4. hash routing
      ========================================================= */
 
 var sections = document.querySelectorAll('.panel');
-  var navLinks = document.querySelectorAll('.glass-nav a');
+  var navLinks = document.querySelectorAll('.nav a');
 
-function showSection(id) {
+function route() {
+    var id = (location.hash || '#home').slice(1);
     var found = false;
     sections.forEach(function (s) {
       var match = s.id === id;
       s.classList.toggle('active', match);
       if (match) found = true;
     });
-    if (!found) { showSection('home'); return; }
+    if (!found) { route.call(null, location.hash = '#home'); return; }
     navLinks.forEach(function (a) {
       a.classList.toggle('active', a.getAttribute('href') === '#' + id);
     });
-  }
-
-function route() {
-    showSection((location.hash || '#home').slice(1));
   }
 
 window.addEventListener('hashchange', route);
   route();
 
 /* =========================================================
-     3. clock, visit counter, last-updated
+     5. optional custom cursor — flip USE_CUSTOM_CURSOR to
+        true to enable. A soft ring follows the pointer and
+        your normal cursor hides. Ignored on touch devices.
      ========================================================= */
 
-var clock = document.getElementById('clock');
-  var DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun',
-                'Jul','Aug','Sep','Oct','Nov','Dec'];
+var USE_CUSTOM_CURSOR = false;
 
-function pad(n) { return n < 10 ? '0' + n : '' + n; }
+if (USE_CUSTOM_CURSOR && window.matchMedia('(pointer: fine)').matches) {
+    document.body.classList.add('custom-cursor');
 
-function tick() {
-    var d = new Date();
-    clock.textContent = DAYS[d.getDay()] + ' ' + pad(d.getDate()) + ' '
-      + MONTHS[d.getMonth()] + ' · ' + pad(d.getHours()) + ':'
-      + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+var ring = document.createElement('div');
+    ring.id = 'cursor';
+    document.body.appendChild(ring);
+
+var cx = 0, cy = 0;
+    window.addEventListener('pointermove', function (e) {
+      cx = e.clientX; cy = e.clientY;
+    }, { passive: true });
+
+(function follow() {
+      var rx = parseFloat(ring.style.transform.match(/-?[\d.]+/g) || [0])[0] || 0;
+      // ease toward pointer
+      rx += (cx - rx) * 0.2;
+      var ry = (parseFloat(ring.dataset.ry || '0')) + (cy - parseFloat(ring.dataset.ry || '0')) * 0.2;
+      ring.dataset.ry = ry;
+      ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)';
+      requestAnimationFrame(follow);
+    })();
   }
-  tick();
-  setInterval(tick, 1000);
-
-var counter = document.getElementById('counter');
-  var visits = parseInt(localStorage.getItem('ph_visits') || '0', 10) + 1;
-  localStorage.setItem('ph_visits', visits);
-  counter.textContent = ('000000' + visits).slice(-6);
-
-var modified = document.getElementById('last-modified');
-  if (document.lastModified) {
-    modified.textContent = new Date(document.lastModified).toDateString();
-  }
-
-/* =========================================================
-     4. guestbook (localStorage only)
-     ========================================================= */
-
-var form = document.getElementById('guestbook-form');
-  var list = document.getElementById('guestbook-entries');
-  var emptyNote = document.getElementById('guestbook-empty');
-
-function escapeText(t) {
-    var el = document.createElement('div');
-    el.textContent = t;
-    return el.innerHTML;
-  }
-
-function loadEntries() {
-    try { return JSON.parse(localStorage.getItem('ph_guestbook') || '[]'); }
-    catch (e) { return []; }
-  }
-
-function render() {
-    var entries = loadEntries();
-    list.innerHTML = '';
-    emptyNote.style.display = entries.length ? 'none' : 'block';
-    entries.slice().reverse().forEach(function (e) {
-      var li = document.createElement('li');
-      li.innerHTML = '<span class="who">' + escapeText(e.name) + '</span>'
-        + '<span class="when">' + escapeText(e.when) + '</span><br>'
-        + escapeText(e.message);
-      list.appendChild(li);
-    });
-  }
-
-form.addEventListener('submit', function (ev) {
-    ev.preventDefault();
-    var name = document.getElementById('gb-name').value.trim();
-    var message = document.getElementById('gb-message').value.trim();
-    if (!name || !message) return;
-
-var entries = loadEntries();
-    entries.push({
-      name: name,
-      message: message,
-      when: new Date().toLocaleDateString()
-    });
-    localStorage.setItem('ph_guestbook', JSON.stringify(entries));
-    form.reset();
-    render();
-  });
-
-render();
 })();
