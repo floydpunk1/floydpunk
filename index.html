@@ -3,96 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A quiet corner of the web, behind glass.">
-  <meta name="color-scheme" content="dark">
-  <title>Phoenix — Homepage</title>
+  <meta name="description" content="Homepage — drawings, links, and a little about me.">
+  <title>Homepage</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- the water: lives behind everything -->
-  <div class="fluid" aria-hidden="true">
-    <div class="blob" id="blob-1"></div>
-    <div class="blob" id="blob-2"></div>
-    <div class="blob" id="blob-3"></div>
-    <div class="glass-sheet"></div>
+<!-- the water: two soft glows, cheap to render -->
+  <div class="water" aria-hidden="true">
+    <div class="glow glow-a" id="glow-a"></div>
+    <div class="glow glow-b" id="glow-b"></div>
   </div>
 
-<div class="page">
+<header class="head">
+    <h1>Homepage</h1>
+    <p class="sub">phoenix flame</p>
+  </header>
 
-<header class="hero">
-      <p class="kicker">personal homepage</p>
-      <h1>phoenix<span class="dot">.</span></h1>
-      <p class="tagline">A quiet corner of the web, behind glass.</p>
-    </header>
-
-<nav class="glass-nav" aria-label="Site navigation">
-      <a href="#home" class="active">Home</a>
-      <a href="#journal">Journal</a>
-      <a href="#links">Links</a>
-      <a href="#guestbook">Guestbook</a>
-    </nav>
+<nav class="nav" aria-label="Site navigation">
+    <a href="#home" class="active">Home</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#links">Links</a>
+    <a href="#about">About</a>
+  </nav>
 
 <main>
 
-<section id="home" class="panel glass-card">
-        <h2>Welcome</h2>
-        <p>You have reached a small homepage. There is no feed here, no
-        notifications, and nothing asking you to subscribe. Just words
-        resting on slowly moving water.</p>
-        <dl class="status">
-          <div><dt>Local time</dt><dd id="clock">—</dd></div>
-          <div><dt>Your visits</dt><dd id="counter">—</dd></div>
-          <div><dt>Last updated</dt><dd id="last-modified">—</dd></div>
-        </dl>
-      </section>
+<section id="home" class="panel active">
+      <p class="lead">A personal homepage. Drawings, links, and a little
+      about me — nothing more.</p>
+    </section>
 
-<section id="journal" class="panel glass-card">
-        <h2>Journal</h2>
-        <article>
-          <h3>08 November 2026 — First entry</h3>
-          <p>The site went up today. No grand plans yet — just a place
-          to write things down and keep a few links. More to follow.</p>
-        </article>
-        <article>
-          <h3>— an empty page, for now</h3>
-          <p>Future entries will appear here.</p>
-        </article>
-      </section>
+<section id="gallery" class="panel">
+      <h2>Gallery</h2>
+      <p class="note">Original character albums. Click one to open it.</p>
+      <div class="albums" id="albums"></div>
+    </section>
 
-<section id="links" class="panel glass-card">
-        <h2>Links</h2>
-        <p>A short list of places worth returning to:</p>
-        <ul class="links">
-          <li><a href="https://en.wikipedia.org" rel="noopener">Wikipedia</a> — the old reliable.</li>
-          <li><a href="https://news.ycombinator.com" rel="noopener">Hacker News</a> — plain text, still going.</li>
-          <li><a href="https://developer.mozilla.org" rel="noopener">MDN Web Docs</a> — where everything was learned.</li>
-        </ul>
-      </section>
+<section id="links" class="panel">
+      <h2>Links</h2>
+      <ul class="linklist">
+        <li><a href="https://github.com" rel="noopener noreferrer" target="_blank">GitHub</a></li>
+        <li><a href="https://en.wikipedia.org" rel="noopener noreferrer" target="_blank">Wikipedia</a></li>
+        <li><a href="https://developer.mozilla.org" rel="noopener noreferrer" target="_blank">MDN Web Docs</a></li>
+      </ul>
+    </section>
 
-<section id="guestbook" class="panel glass-card">
-        <h2>Guestbook</h2>
-        <p>Leave a note. It is kept in this browser only — nothing
-        is sent anywhere.</p>
-        <form id="guestbook-form">
-          <label for="gb-name">Name</label>
-          <input type="text" id="gb-name" maxlength="40" required autocomplete="off">
-          <label for="gb-message">Message</label>
-          <textarea id="gb-message" rows="3" maxlength="300" required></textarea>
-          <button type="submit">Sign the book</button>
-        </form>
-        <ul id="guestbook-entries" class="guestbook"></ul>
-        <p class="muted" id="guestbook-empty">No entries yet. Be the first.</p>
-      </section>
+<section id="about" class="panel">
+      <h2>About</h2>
+      <p>A short paragraph about you goes here. Keep it simple —
+      who you are, what you draw, what this site is for.</p>
+    </section>
 
 </main>
 
-<footer class="colophon">
-      <p>No cookies, no tracking. Handwritten HTML.<br>
-      <a href="#home">Return to top</a></p>
-    </footer>
-
-</div>
+<footer class="foot">
+    <p>No cookies, no tracking. Handwritten HTML.</p>
+  </footer>
 
 <script src="script.js"></script>
 </body>
