@@ -3,64 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Homepage — drawings, links, and a little about me.">
+  <meta name="description" content="Homepage.">
   <title>Homepage</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+      background: #d6d9de
+        linear-gradient(#e9ebef, #cfD3d9);
+      font-family: Verdana, Tahoma, Geneva, sans-serif;
+      font-size: 11px;
+      color: #3c3f45;
+      padding: 2rem 1rem;
+    }
+
+.site {
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+/* the classic bordered box */
+    .box {
+      background: #f4f5f7;
+      border: 1px solid #8b8f97;
+    }
+
+header.box {
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: linear-gradient(#fdfeff, #e2e4e9);
+    }
+
+header h1 {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #2b2e34;
+    }
+
+header p {
+      margin-top: 3px;
+      color: #6f747d;
+    }
+
+/* old-school menu bar */
+    nav.box {
+      padding: 5px 10px;
+      margin-bottom: 10px;
+      background: linear-gradient(#f7f8fa, #dcdfe4);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+nav a { color: #2743a0; text-decoration: underline; margin-right: 12px; }
+    nav a:hover { color: #9a1f1f; }
+
+main.box { padding: 16px; margin-bottom: 10px; }
+
+h2 {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #4a4e57;
+      border-bottom: 1px dotted #9a9ea6;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+
+h2:not(:first-child) { margin-top: 18px; }
+
+p { margin-bottom: 8px; }
+    ul { list-style: square; margin: 0 0 8px 18px; }
+    li { margin-bottom: 3px; }
+
+a { color: #2743a0; text-decoration: underline; }
+    a:hover { color: #9a1f1f; }
+
+/* beveled Y2K button */
+    .btn {
+      display: inline-block;
+      padding: 3px 14px;
+      font-family: inherit;
+      font-size: 10px;
+      color: #2b2e34;
+      background: linear-gradient(#fdfdfe, #d9dce1);
+      border: 1px solid #8b8f97;
+      border-top-color: #fdfeff;
+      border-left-color: #fdfeff;
+      text-decoration: none;
+    }
+    .btn:active {
+      background: #d0d3d8;
+      border-top-color: #8b8f97;
+      border-left-color: #8b8f97;
+      border-bottom-color: #fdfeff;
+      border-right-color: #fdfeff;
+    }
+
+/* the little status strip every 2001 site had */
+    .status {
+      padding: 6px 16px;
+      font-size: 10px;
+      color: #6f747d;
+      background: linear-gradient(#f7f8fa, #dcdfe4);
+      border: 1px solid #8b8f97;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
+
+footer {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 10px;
+      color: #7b8089;
+    }
+  </style>
 </head>
 <body>
 
-<!-- the water: two soft glows, cheap to render -->
-  <div class="water" aria-hidden="true">
-    <div class="glow glow-a" id="glow-a"></div>
-    <div class="glow glow-b" id="glow-b"></div>
-  </div>
+<div class="site">
 
-<header class="head">
-    <h1>Homepage</h1>
-    <p class="sub">phoenix flame</p>
-  </header>
+<header class="box">
+      <h1>Homepage</h1>
+      <p>a small place on the internet &middot; est. 2026</p>
+    </header>
 
-<nav class="nav" aria-label="Site navigation">
-    <a href="#home" class="active">Home</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#links">Links</a>
-    <a href="#about">About</a>
-  </nav>
+<nav class="box">
+      <a href="#main">Main</a>
+      <a href="#links">Links</a>
+      <a href="#about">About</a>
+    </nav>
 
-<main>
+<main class="box" id="main">
 
-<section id="home" class="panel active">
-      <p class="lead">A personal homepage. Drawings, links, and a little
-      about me — nothing more.</p>
-    </section>
+<h2>Welcome</h2>
+      <p>You have reached a homepage. There is no feed, no pop-ups,
+      and nothing asking you to sign up. Have a look around.</p>
+      <p><a class="btn" href="#links">View Links</a></p>
 
-<section id="gallery" class="panel">
-      <h2>Gallery</h2>
-      <p class="note">Original character albums. Click one to open it.</p>
-      <div class="albums" id="albums"></div>
-    </section>
-
-<section id="links" class="panel">
-      <h2>Links</h2>
-      <ul class="linklist">
-        <li><a href="https://github.com" rel="noopener noreferrer" target="_blank">GitHub</a></li>
-        <li><a href="https://en.wikipedia.org" rel="noopener noreferrer" target="_blank">Wikipedia</a></li>
-        <li><a href="https://developer.mozilla.org" rel="noopener noreferrer" target="_blank">MDN Web Docs</a></li>
+<h2 id="links">Links</h2>
+      <ul>
+        <li><a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="https://en.wikipedia.org" target="_blank" rel="noopener noreferrer">Wikipedia</a></li>
+        <li><a href="https://developer.mozilla.org" target="_blank" rel="noopener noreferrer">MDN Web Docs</a></li>
       </ul>
-    </section>
 
-<section id="about" class="panel">
-      <h2>About</h2>
-      <p>A short paragraph about you goes here. Keep it simple —
-      who you are, what you draw, what this site is for.</p>
-    </section>
+<h2 id="about">About</h2>
+      <p>A short paragraph about you goes here &mdash; what you're into,
+      what this page is for. Two or three lines is plenty.</p>
 
 </main>
 
-<footer class="foot">
-    <p>No cookies, no tracking. Handwritten HTML.</p>
-  </footer>
+<div class="status">
+      <span>best viewed in any browser</span>
+      <span>no cookies, no tracking</span>
+      <span>last updated: 2026</span>
+    </div>
 
-<script src="script.js"></script>
+<footer>
+      &copy; 2026 &middot; handwritten html &middot; <a href="https://github.com" target="_blank" rel="noopener noreferrer">github</a>
+    </footer>
+
+</div>
+
 </body>
 </html>
